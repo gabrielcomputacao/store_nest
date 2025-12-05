@@ -15,7 +15,7 @@ export class UserRepository {
   }
 
   async hasEmail(email: string) {
-    const hasEmail = this.listUsers.find((user) => user.email === email);
+    const hasEmail = this.listUsers.find((user) => user.getEmail === email);
     return !!hasEmail;
   }
 }
