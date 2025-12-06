@@ -1,6 +1,11 @@
+import { v4 as uuid } from 'uuid'
+
 export class UserEntity {
-  constructor(private name: string, private email: string, private senha: string) {
-    this.id = '123123';
+  constructor(public name: string, public email: string, public senha: string) {
+    this.id = uuid();
+    this.name = name;
+    this.email= email;
+    this.senha = senha;
   }
 
   private id: string;

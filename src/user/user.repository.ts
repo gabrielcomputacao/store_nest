@@ -18,4 +18,24 @@ export class UserRepository {
     const hasEmail = this.listUsers.find((user) => user.getEmail === email);
     return !!hasEmail;
   }
+
+  async updateUser(id: string, data: Partial<UserEntity>) {
+    const userFound = this.listUsers.find((user) => {
+      return user.getId === id;
+    });
+
+    if (!userFound) {
+      return '';
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (key === 'id') {
+        return;
+      }
+
+      userFound[key] = value;
+    });
+
+    return userFound;
+  }
 }

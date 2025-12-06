@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { createUserDTO } from './dto/createUser.dto';
 import { UserEntity } from './entitys/userEntity';
 import { ListUserDTO } from './dto/ListUser.dto';
+import { updateUserDTO } from './dto/updateUser.dto';
 
 @Controller('/usuarios')
 export class UserController {
@@ -14,7 +15,7 @@ export class UserController {
 
     await this.userRepository.addUser(userEntity);
     return {
-      user: new ListUserDTO(userEntity.getId, userEntity.getId),
+      user: new ListUserDTO(userEntity.name, userEntity.getId),
       message: 'Usuário criado com sucesso!',
     };
   }
@@ -23,9 +24,21 @@ export class UserController {
   async getUser() {
     const listUser = await this.userRepository.getListUsers();
     const formatListUser = listUser.map((user) => {
-      return new ListUserDTO(user.getId, user.getName);
+      return new ListUserDTO(user.name, user.getId);
     });
 
     return formatListUser;
   }
+
+  @Put('/:id')
+  async updateUser(@Param('id') id: string,@Body() data: updateUserDTO){
+
+    const updatedUser = await this.userRepository.updateUser(id, data)
+    return {
+      user: updatedUser,
+      message: updatedUser ? "user updated." : "Usuario nao cadastrado"
+    }
+  }
+
+
 }
