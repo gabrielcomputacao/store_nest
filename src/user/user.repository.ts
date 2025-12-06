@@ -6,6 +6,14 @@ import { UserEntity } from './entitys/userEntity';
 export class UserRepository {
   private listUsers: UserEntity[] = [];
 
+  private async getUserById(id: string) {
+    const userSelected = await this.listUsers.find((user) => {
+      return user.getId === id;
+    });
+
+    return userSelected;
+  }
+
   async addUser(user: UserEntity) {
     this.listUsers.push(user);
   }
@@ -20,9 +28,7 @@ export class UserRepository {
   }
 
   async updateUser(id: string, data: Partial<UserEntity>) {
-    const userFound = this.listUsers.find((user) => {
-      return user.getId === id;
-    });
+    const userFound = this.getUserById(id);
 
     if (!userFound) {
       return '';
@@ -37,5 +43,14 @@ export class UserRepository {
     });
 
     return userFound;
+  }
+
+  async deleteUser(id: string) {
+    const userDelete = await this.getUserById(id);
+    this.listUsers = this.listUsers.filter(
+      (user) => user.getId !== userDelete?.getId,
+    );
+
+    return userDelete;
   }
 }
