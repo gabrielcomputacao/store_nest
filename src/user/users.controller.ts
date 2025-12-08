@@ -4,10 +4,13 @@ import { createUserDTO } from './dto/createUser.dto';
 import { UserEntity } from './entitys/userEntity.entity';
 import { ListUserDTO } from './dto/ListUser.dto';
 import { updateUserDTO } from './dto/updateUser.dto';
+import { UserService } from './service/user.service';
 
 @Controller('/usuarios')
 export class UserController {
-  constructor(private userRepository: UserRepository) {}
+  constructor(private userRepository: UserRepository,
+    private userService: UserService
+  ) {}
 
   @Post()
   async createUser(@Body() user: createUserDTO) {
@@ -22,10 +25,13 @@ export class UserController {
 
   @Get()
   async getUser() {
-    const listUser = await this.userRepository.getListUsers();
+    // * Modo como funcionava sem o banco de dados
+    /* const listUser = await this.userRepository.getListUsers();
     const formatListUser = listUser.map((user) => {
       return new ListUserDTO(user.name, user.getId);
-    });
+    }); */
+
+    const formatListUser = this.userService.getListUsers();
 
     return formatListUser;
   }
