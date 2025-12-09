@@ -29,6 +29,7 @@ export class ProductController {
     productEntity.value = data.value;
     productEntity.description = data.description;
     productEntity.setId = uuid();
+    productEntity.feature = data.feature;
 
     await this.productService.createProduct(productEntity);
     return data;

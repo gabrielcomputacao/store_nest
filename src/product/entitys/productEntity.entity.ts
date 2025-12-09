@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { FeatureDTO } from '../dto/feature.dto';
+import { ProductFeature } from './productFeature.entity';
 
 @Entity({ name: 'products' })
 export class ProductEntity {
@@ -15,6 +16,11 @@ export class ProductEntity {
   @Column({ name: 'description', nullable: true, length: 255 })
   description: string;
 
+  @OneToMany(() => ProductFeature, (productFeatureEntity) => 
+  productFeatureEntity.product, { cascade: true, eager: true }
+  )
+  feature: ProductFeature[]
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string
 
@@ -23,8 +29,6 @@ export class ProductEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string
-
-  //   feature: FeatureDTO;
 
   public set setId(v: string) {
     this.id = v;

@@ -1,5 +1,6 @@
 
 import { IsEqualTen } from '../decorators/isEqualTen';
+import { ProductEntity } from '../entitys/productEntity.entity';
 import { FeatureDTO } from './feature.dto';
 import {  IsNotEmpty, IsNumber, IsOptional, MaxLength } from 'class-validator';
 
@@ -17,5 +18,5 @@ export class ProductDTO {
   description: string;
 
   @IsOptional()
-  feature: FeatureDTO;
+  feature: FeatureDTO[];
 }
