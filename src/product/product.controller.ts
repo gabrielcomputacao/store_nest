@@ -1,34 +1,54 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
-import { ProductDTO } from "./dto/product.dto";
-import { ProductRepository } from "./product.repository";
-import { ProductEntity } from "./entitys/productEntity.entity";
-import { v4 as uuid } from 'uuid'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ProductDTO } from './dto/product.dto';
+import { ProductRepository } from './product.repository';
+import { ProductEntity } from './entitys/productEntity.entity';
+import { v4 as uuid } from 'uuid';
+import { ProductService } from './service/product.service';
+import { ProductUpdateDTO } from './dto/productUpdate.dto';
 
+@Controller('/produto')
+export class ProductController {
+  constructor(
+    private products: ProductRepository,
+    private readonly productService: ProductService,
+  ) {}
 
-@Controller("/produto")
-export class ProductController{
+  @Post()
+  async createProduct(@Body() data: ProductDTO) {
+    const productEntity = new ProductEntity();
 
-    constructor(private products:ProductRepository ){}
+    productEntity.name = data.name;
+    productEntity.value = data.value;
+    productEntity.description = data.description;
+    productEntity.setId = uuid();
 
-    @Post()
-    async createProduct(@Body() data: ProductDTO ){
+    await this.productService.createProduct(productEntity);
+    return data;
+  }
 
-        const productEntity = new ProductEntity();
+  @Get()
+  async listProducts() {
+    const products = await this.productService.getProduct();
+    return products;
+  }
 
-        productEntity.name = data.name;
-        productEntity.value = data.value;
-        productEntity.description = data.description;
-        productEntity.setId = uuid();
-       
+  @Patch('/:id')
+  async updateProduct(@Param('id') id: string, @Body() data: ProductUpdateDTO) {
+    await this.productService.updateProduct(id, data);
+    return data;
+  }
 
-        await this.products.addProduct(productEntity)
-        return data;
-    }
-
-    @Get()
-    async listProducts(){
-       const products = await this.products.getProducts();
-       return products
-    }
-
+  @Delete('/:id')
+  async deleteProduct(@Param('id') id: string) {
+    const result = await this.productService.deleteProduct(id);
+    return result;
+  }
 }
