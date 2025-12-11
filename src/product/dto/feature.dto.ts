@@ -10,4 +10,7 @@ export class FeatureDTO{
     description: string;
 
     product: ProductEntity;
+
+    @IsOptional()
+    weight: number;
 }
