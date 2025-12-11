@@ -13,7 +13,11 @@ export class ProductFeature {
   @Column({ name: 'description', nullable: true })
   description: string;
 
+  @Column({ name: 'weight', nullable: true })
+  weight: number;
+
   // * orphanedRowAction = Quando essa coluna nao tiver relação com nada, quando ela for orfâ, ela será deletada
   @ManyToOne( () => ProductEntity, (product) => product.feature, { orphanedRowAction: 'delete' ,onDelete: 'CASCADE', onUpdate: 'CASCADE' } )
   product: ProductEntity
+
 }
