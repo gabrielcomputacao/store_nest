@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+
+import { InjectRepository } from '@nestjs/typeorm';
+import { OrderEntity } from './entities/order.entity';
+import { Repository } from 'typeorm';
+import { UserEntity } from '../user/entitys/userEntity.entity';
+import { StatusOrder } from './enum/statusOrder.enum';
 
 @Injectable()
 export class OrderService {
-  create(createOrderDto: CreateOrderDto) {
-    return 'This action adds a new order';
-  }
+  // * O construtor fica responsavel por injetar a classe repository, onde teria os dados do banco de dados ligados por meio do typeorm
+  constructor(
+    @InjectRepository(OrderEntity)
+    private readonly orderRepository: Repository<OrderEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+  ) {}
 
-  findAll() {
-    return `This action returns all order`;
-  }
+  async createOrder(userId: string) {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    const order = new OrderEntity();
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
-  }
+    order.totalValue = 0;
+    order.status = StatusOrder.EM_PROCESSAMENTO;
+    if (user) {
+      order.user = user;
+    }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+    const createdOrder = await this.orderRepository.save(order);
+    return createdOrder;
   }
 }

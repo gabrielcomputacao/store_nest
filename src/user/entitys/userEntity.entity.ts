@@ -1,8 +1,10 @@
+import { OrderEntity } from '../../order/entities/order.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -30,6 +32,9 @@ export class UserEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deleted_at: string;
+
+  @OneToMany( () => OrderEntity, (order) => order.user )
+  orders: OrderEntity[]
 
   constructor(name: string, email: string, senha: string) {
     this.id = uuid();
