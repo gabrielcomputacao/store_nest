@@ -38,7 +38,8 @@ export class OrderEntity {
 
   @OneToMany(() => ItemOrderEntity, (item) => item.order, {
     // * TOda vez que um pedido entity for criado ele cria um item pedido (order)
-    cascade: true
+    cascade: true,
+    eager: true
   })
-  itemOrder: ItemOrderEntity;
+  itemOrder: ItemOrderEntity[];
 }

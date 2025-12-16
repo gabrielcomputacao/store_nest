@@ -1,6 +1,7 @@
 import { UserEntity } from 'src/user/entitys/userEntity.entity';
 import { StatusOrder } from '../enum/statusOrder.enum';
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import { ItemOrderEntity } from '../itemOrder.entity';
 
 export class OrderDTO {
 
@@ -11,4 +12,8 @@ export class OrderDTO {
 
   @IsOptional()
   user: UserEntity;
+
+  @IsNotEmpty()
+  itemOrder: ItemOrderEntity[];
+
 }
