@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { FeatureDTO } from '../dto/feature.dto';
 import { ProductFeature } from './productFeature.entity';
+import { ItemOrderEntity } from '../../order/itemOrder.entity';
 
 @Entity({ name: 'products' })
 export class ProductEntity {
@@ -20,6 +21,9 @@ export class ProductEntity {
   productFeatureEntity.product, { cascade: true, eager: true }
   )
   feature: ProductFeature[]
+
+  @OneToMany( () => ItemOrderEntity, (item) =>  item.product , {eager: true})
+  itemsOrder: ItemOrderEntity[]
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string

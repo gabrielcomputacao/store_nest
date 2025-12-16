@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderEntity } from './entities/order.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UserEntity } from '../user/entitys/userEntity.entity';
 import { StatusOrder } from './enum/statusOrder.enum';
 import { OrderDTO } from './dto/order.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ItemOrderEntity } from './itemOrder.entity';
+import { ProductEntity } from '../product/entitys/productEntity.entity';
 
 @Injectable()
 export class OrderService {
@@ -17,10 +18,17 @@ export class OrderService {
     private readonly orderRepository: Repository<OrderEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(ProductEntity)
+    private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
   async createOrder(userId: string, dataOrder: CreateOrderDto) {
     const user = await this.userRepository.findOneBy({ id: userId });
+    const productIds = dataOrder.itensPedido.map((value) => value.productId);
+
+    const products = await this.productRepository.findBy({
+      id: In(productIds),
+    });
 
     const order = new OrderEntity();
 
@@ -30,10 +38,13 @@ export class OrderService {
     }
 
     const itemsOrderEntitys = dataOrder.itensPedido.map((order) => {
+      const hasProduct = products.find( product => product.id === order.productId )
       const itemEntity = new ItemOrderEntity();
 
-      itemEntity.price = 10;
+      itemEntity.product = hasProduct ?? {} as ProductEntity;
+      itemEntity.price = hasProduct?.value ?? 0;
       itemEntity.quantity = order.quantidade;
+      // itemEntity.product.quantity -= order.quantidade;
       return itemEntity;
     });
 
