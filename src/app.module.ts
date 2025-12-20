@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DbCOnfigService } from './config/db.config.service';
 import { ConfigModule } from '@nestjs/config';
 import { OrderModule } from './order/order.module';
+import { APP_FILTER } from '@nestjs/core';
+import { ExceptionCustomFilter } from './filter/ExceptionFilter.filter';
 
 @Module({
   imports: [
@@ -20,6 +22,11 @@ import { OrderModule } from './order/order.module';
     OrderModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: ExceptionCustomFilter
+    }
+  ],
 })
 export class AppModule {}
