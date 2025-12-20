@@ -60,7 +60,7 @@ export class OrderService {
       itemEntity.product = hasProduct ;
       itemEntity.price = hasProduct?.value ?? 0;
       itemEntity.quantity = order.quantidade;
-      // itemEntity.product.quantity -= order.quantidade;
+      itemEntity.product.quantity -= order.quantidade;
       return itemEntity;
     });
 

@@ -17,6 +17,9 @@ export class ProductEntity {
   @Column({ name: 'description', nullable: true, length: 255 })
   description: string;
 
+  @Column({ name: "quantity", nullable: false, default: 0 })
+  quantity: number;
+
   @OneToMany(() => ProductFeature, (productFeatureEntity) => 
   productFeatureEntity.product, { cascade: true, eager: true }
   )
