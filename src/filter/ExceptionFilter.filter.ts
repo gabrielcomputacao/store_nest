@@ -5,13 +5,22 @@ import {
   ArgumentsHost,
   HttpStatus,
 } from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
 import { Request, Response } from 'express';
 
 @Catch()
 export class ExceptionCustomFilter implements ExceptionFilter {
+
+  constructor(private adapterHost: HttpAdapterHost){}
+
+
   catch(exception: unknown, host: ArgumentsHost) {
-    const response = host.switchToHttp().getResponse<Response>();
-    const request = host.switchToHttp().getRequest<Request>();
+
+// * Adapta o orquestrador de rotas seja express ou outro , para nao quebrar caso mude no futuro
+    const { httpAdapter } = this.adapterHost;
+
+    const response =  host.switchToHttp().getResponse();
+    const requisition = host.switchToHttp().getRequest()
 
     const { status, body } =
       exception instanceof HttpException
@@ -23,11 +32,11 @@ export class ExceptionCustomFilter implements ExceptionFilter {
             status: HttpStatus.INTERNAL_SERVER_ERROR,
             body: {
               timestamp: new Date().toISOString(),
-              path: request.url,
+              path: httpAdapter.getRequestUrl(requisition),
               statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
             },
           };
 
-    response.status(status).json(body);
+    httpAdapter.reply(response, body, status)
   }
 }
