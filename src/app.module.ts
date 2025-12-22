@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { OrderModule } from './order/order.module';
 import { APP_FILTER } from '@nestjs/core';
 import { ExceptionCustomFilter } from './filter/ExceptionFilter.filter';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -20,6 +21,10 @@ import { ExceptionCustomFilter } from './filter/ExceptionFilter.filter';
       inject: [DbCOnfigService],
     }),
     OrderModule,
+    CacheModule.register({
+      isGlobal: true,
+      ttl:10000,
+    })
   ],
   controllers: [],
   providers: [

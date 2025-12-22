@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductDTO } from './dto/product.dto';
 import { ProductRepository } from './product.repository';
@@ -13,6 +14,7 @@ import { ProductEntity } from './entitys/productEntity.entity';
 import { v4 as uuid } from 'uuid';
 import { ProductService } from './service/product.service';
 import { ProductUpdateDTO } from './dto/productUpdate.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('/produto')
 export class ProductController {
@@ -36,8 +38,10 @@ export class ProductController {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   async listProducts() {
     const products = await this.productService.getProduct();
+    console.log("pegando do banco")
     return products;
   }
 
