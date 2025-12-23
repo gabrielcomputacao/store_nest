@@ -13,6 +13,7 @@ import { UserEntity } from './entitys/userEntity.entity';
 import { ListUserDTO } from './dto/ListUser.dto';
 import { updateUserDTO } from './dto/updateUser.dto';
 import { UserService } from './service/user.service';
+import { HashPasswordPipe } from 'src/resources/pipes/hash-password.pipe';
 
 @Controller('/usuarios')
 export class UserController {
@@ -22,8 +23,11 @@ export class UserController {
   ) {}
 
   @Post()
-  async createUser(@Body() user: createUserDTO) {
-    const userEntity = new UserEntity(user.name, user.email, user.senha);
+  async createUser(@Body() user: createUserDTO,
+  @Body('senha', HashPasswordPipe ) senha: string
+) {
+
+    const userEntity = new UserEntity(user.name, user.email, senha);
 
     const result = await this.userService.createUser(userEntity);
     return result;
