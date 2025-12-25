@@ -21,6 +21,17 @@ export class UserService {
     return listUserDTO;
   }
 
+  async getUserWithEmail(email: string): Promise<UserEntity | null>{
+
+    const user = await this.userRepository.findOneBy({
+      email
+    })
+
+    console.log(user);
+    return user;
+
+  }
+
   async createUser(data: createUserDTO) {
     const createdUser = await this.userRepository.save(data);
   }
