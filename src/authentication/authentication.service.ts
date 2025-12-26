@@ -3,10 +3,18 @@ import { CreateAuthenticationDto } from './dto/authentication.dto';
 import { UserService } from 'src/user/service/user.service';
 import * as bcrypt from 'bcrypt';
 import { UserEntity } from 'src/user/entitys/userEntity.entity';
+import { JwtService } from '@nestjs/jwt';
+
+interface IPayload{
+  sub: string,
+  nomeUsuario: string
+}
 
 @Injectable()
 export class AuthenticationService {
-  constructor(private usuarioService: UserService) {}
+  constructor(private usuarioService: UserService,
+    private jwtService:JwtService
+  ) {}
 
   async login(email: string, login: string) {
     const user: UserEntity | null =
@@ -18,7 +26,16 @@ export class AuthenticationService {
       throw new UnauthorizedException();
     }
 
-    console.log(userAutenticated)
+    const payload:IPayload = {
+      sub: user?.id ?? '',
+      nomeUsuario: user?.name ?? ''
+    }
+
+
+    return {
+      token_access: await this.jwtService.signAsync(payload)
+    }
+
 
   }
 }

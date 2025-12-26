@@ -26,8 +26,6 @@ export class UserService {
     const user = await this.userRepository.findOneBy({
       email
     })
-
-    console.log(user);
     return user;
 
   }
