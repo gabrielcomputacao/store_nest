@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { createUserDTO } from './dto/createUser.dto';
@@ -14,6 +15,7 @@ import { ListUserDTO } from './dto/ListUser.dto';
 import { updateUserDTO } from './dto/updateUser.dto';
 import { UserService } from './service/user.service';
 import { HashPasswordPipe } from 'src/resources/pipes/hash-password.pipe';
+import { AutheticationGuard } from 'src/authentication/authentication.guard';
 
 @Controller('/usuarios')
 export class UserController {
@@ -33,6 +35,7 @@ export class UserController {
     return result;
   }
 
+  @UseGuards(AutheticationGuard)
   @Get()
   async getUser() {
     // * Modo como funcionava sem o banco de dados
