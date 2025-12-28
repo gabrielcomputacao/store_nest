@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { UserEntity } from 'src/user/entitys/userEntity.entity';
 import { JwtService } from '@nestjs/jwt';
 
-interface IPayload{
+export interface IUserJwtPayload{
   sub: string,
   nomeUsuario: string
 }
@@ -26,7 +26,7 @@ export class AuthenticationService {
       throw new UnauthorizedException();
     }
 
-    const payload:IPayload = {
+    const payload:IUserJwtPayload = {
       sub: user?.id ?? '',
       nomeUsuario: user?.name ?? ''
     }
