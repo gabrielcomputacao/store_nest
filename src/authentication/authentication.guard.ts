@@ -9,7 +9,7 @@ import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { IUserJwtPayload } from './authentication.service';
 
-interface IRequestUserPayload extends Request {
+export interface IRequestUserPayload extends Request {
   user: IUserJwtPayload
 }
 
