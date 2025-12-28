@@ -4,6 +4,7 @@ import {
   ExceptionFilter,
   ArgumentsHost,
   HttpStatus,
+  ConsoleLogger,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { Request, Response } from 'express';
@@ -11,10 +12,16 @@ import { Request, Response } from 'express';
 @Catch()
 export class ExceptionCustomFilter implements ExceptionFilter {
 
-  constructor(private adapterHost: HttpAdapterHost){}
+  constructor(private adapterHost: HttpAdapterHost,
+    private consoleLogger: ConsoleLogger
+  ){}
 
 
   catch(exception: unknown, host: ArgumentsHost) {
+
+    this.consoleLogger.error(exception);
+    console.error(exception)
+
 
 // * Adapta o orquestrador de rotas seja express ou outro , para nao quebrar caso mude no futuro
     const { httpAdapter } = this.adapterHost;

@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, ConsoleLogger, Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DbCOnfigService } from './config/db.config.service';
 import { ConfigModule } from '@nestjs/config';
 import { OrderModule } from './order/order.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ExceptionCustomFilter } from './filter/ExceptionFilter.filter';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
@@ -43,6 +43,11 @@ import { AuthenticationModule } from './authentication/authentication.module';
       provide: APP_FILTER,
       useClass: ExceptionCustomFilter,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+    ConsoleLogger,
   ],
 })
 export class AppModule { }

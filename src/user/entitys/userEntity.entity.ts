@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { OrderEntity } from '../../order/entities/order.entity';
 import {
   Column,
@@ -21,6 +22,8 @@ export class UserEntity {
   @Column({ name: 'email', length: 70, nullable: false })
   email: string;
 
+  // * Esse exclude não deixa a propriedade aparecer nas respostas da request
+  @Exclude()
   @Column({ name: 'senha', length: 255, nullable: false })
   senha: string;
 
