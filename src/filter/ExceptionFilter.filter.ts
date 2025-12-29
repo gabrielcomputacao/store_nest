@@ -27,7 +27,12 @@ export class ExceptionCustomFilter implements ExceptionFilter {
     const { httpAdapter } = this.adapterHost;
 
     const response =  host.switchToHttp().getResponse();
-    const requisition = host.switchToHttp().getRequest()
+    const requisition = host.switchToHttp().getRequest();
+
+    if('user' in requisition){
+      this.consoleLogger.log(`usuario tentando acessar a rota ${requisition?.user?.sub}`)
+    }
+
 
     const { status, body } =
       exception instanceof HttpException

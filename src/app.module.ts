@@ -10,6 +10,7 @@ import { ExceptionCustomFilter } from './filter/ExceptionFilter.filter';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { LoggerGlobalInterceptor } from './resources/interceptors/logger-global/logger-global.interceptor';
 
 @Module({
   imports: [
@@ -39,14 +40,22 @@ import { AuthenticationModule } from './authentication/authentication.module';
   ],
   controllers: [],
   providers: [
+    // filter para cair no catch global
     {
       provide: APP_FILTER,
       useClass: ExceptionCustomFilter,
     },
+    // interceptor para conseguir usar o exclude , include dentro das entitys
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
     },
+    // Interceptor para usar o interceptor global de logs
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerGlobalInterceptor,
+    },
+    // Logger nativo
     ConsoleLogger,
   ],
 })
