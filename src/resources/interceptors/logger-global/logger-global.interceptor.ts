@@ -9,7 +9,8 @@ export class LoggerGlobalInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
 
     const requisition = context.switchToHttp().getRequest();
-
+    const { path, method } = requisition
+    this.consoleLogger.log(`${path}  ${method}`)
     
     // next.handle representa o controller
     return next.handle().pipe(
